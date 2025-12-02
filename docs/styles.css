@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serify;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(9, 50px);
+    grid-template-rows: repeat(9, 50px);
+    justify-content: center;
+    margin: 20px auto;
+    gap: 0;
+}
+
+.cell {
+    border: 1px solid black;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cell.prefilled {
+    background-color: #ddd;
+    font-weight: bold;
+}
+
+.cell:nth-child(3n) {
+    border-right: 2px solid black;
+}
+
+.cell.selected {
+    background-color: #fff7c2;
+}
+
+#board div:nth-child(n+19):nth-child(-n+27),
+#board div:nth-child(n+46):nth-child(-n+54),
+#board div:nth-child(n+73):nth-child(-n+81) {
+    border-bottom: 2px solid black;
+}
