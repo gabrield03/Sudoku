@@ -1,0 +1,13 @@
+sudoku to add
+
+arrow key movement
+solve 1 cell (hint?)
+solve entire board
+number validation
+undo x amount of turns
+notes
+add number block - when all 9 of a number is used, make the number fade out (basically unselectable?)
+add easy, medium, hard, extreme
+timer
+
+hint (advanced where something is highlighted)
