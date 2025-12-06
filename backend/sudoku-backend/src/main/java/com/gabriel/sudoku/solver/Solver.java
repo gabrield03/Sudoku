@@ -2,8 +2,10 @@ package com.gabriel.sudoku.solver;
 
 public class Solver {
     
-    // TODO: Receive solution board from generator by difficulty + id
-
+    public static boolean solve(int[][] board) {
+        // TODO: implement real solver
+        return true;
+    }
 
 
 
@@ -11,6 +13,9 @@ public class Solver {
     // Solve with backtracking
     /**
      * Solves a given (starting) board with backtracking
+     * Note:
+     *    Time Complexity: O(9 ^(n + n))
+     *    Space Complexity: O(1)
      * 
      * @param boardGiven 2D unsolved Sudoku board
      * @return 2D solved Sudoku board
@@ -24,12 +29,12 @@ public class Solver {
             }
         }
 
-        solve(boardSolved);
+        solver(boardSolved);
 
         return boardSolved;
     }
 
-    private static void solve(int[][] board) {
+    private static void solver(int[][] board) {
         solveRecursively(board, 0, 0);
     }
 
