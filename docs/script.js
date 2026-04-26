@@ -263,14 +263,17 @@ function placeNumber(value) {
   board[selectedRow][selectedCol] = value;
   notes[selectedRow][selectedCol].clear();
 
-  if (value !== 0 && value !== solution[selectedRow][selectedCol] && previousValue !== value) {
-    mistakes++;
-    mistakesDisplay.textContent = mistakes;
-    setStatus("That number does not fit there.", "error");
-  } else if (value !== 0) {
-    setStatus("Nice, that number is correct.");
-  } else {
+  if (value === 0) {
     setStatus("Cell cleared.");
+  } else if (value !== solution[selectedRow][selectedCol]) {
+    if (previousValue !== value) {
+      mistakes++;
+      mistakesDisplay.textContent = mistakes;
+    }
+
+    setStatus("That number does not fit there.", "error");
+  } else {
+    setStatus("Nice, that number is correct.");
   }
 
   drawBoard();
