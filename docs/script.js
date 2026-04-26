@@ -9,6 +9,7 @@ const statusDisplay = document.getElementById("status");
 const numberPad = document.getElementById("number-pad");
 const eraseButton = document.getElementById("erase");
 const notesToggleButton = document.getElementById("notes-toggle");
+const themeToggleButton = document.getElementById("theme-toggle");
 
 const puzzlesByDifficulty = {
   easy: [
@@ -498,12 +499,31 @@ function toggleNote(value) {
   setStatus(`Toggled note ${value}.`);
 }
 
+function toggleTheme() {
+  const isDark = document.body.classList.toggle("dark-theme");
+  themeToggleButton.textContent = isDark ? "Light Mode" : "Dark Mode";
+  localStorage.setItem("sudoku-theme", isDark ? "dark" : "light");
+}
+
+function loadSavedTheme() {
+  const savedTheme = localStorage.getItem("sudoku-theme");
+
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-theme");
+    themeToggleButton.textContent = "Light Mode";
+  } else {
+    themeToggleButton.textContent = "Dark Mode";
+  }
+}
+
 newGameButton.addEventListener("click", startNewGame);
 solveButton.addEventListener("click", solveBoard);
 checkBoardButton.addEventListener("click", checkBoard);
 eraseButton.addEventListener("click", eraseSelectedCell);
-document.addEventListener("keydown", handleKeyDown);
 notesToggleButton.addEventListener("click", toggleNotesMode);
+themeToggleButton.addEventListener("click", toggleTheme);
+document.addEventListener("keydown", handleKeyDown);
 
+loadSavedTheme();
 createNumberPad();
 startNewGame();
