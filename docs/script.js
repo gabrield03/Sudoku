@@ -8,35 +8,10 @@ const mistakesDisplay = document.getElementById("mistakes");
 const statusDisplay = document.getElementById("status");
 const numberPad = document.getElementById("number-pad");
 const eraseButton = document.getElementById("erase");
+const notesToggleButton = document.getElementById("notes-toggle");
 
 const puzzlesByDifficulty = {
   easy: [
-    {
-      given: [
-        [5, 3, 0, 0, 7, 0, 0, 0, 0],
-        [6, 0, 0, 1, 9, 5, 0, 0, 0],
-        [0, 9, 8, 0, 0, 0, 0, 6, 0],
-        [8, 0, 0, 0, 6, 0, 0, 0, 3],
-        [4, 0, 0, 8, 0, 3, 0, 0, 1],
-        [7, 0, 0, 0, 2, 0, 0, 0, 6],
-        [0, 6, 0, 0, 0, 0, 2, 8, 0],
-        [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 0, 7, 9]
-      ],
-      solution: [
-        [5, 3, 4, 6, 7, 8, 9, 1, 2],
-        [6, 7, 2, 1, 9, 5, 3, 4, 8],
-        [1, 9, 8, 3, 4, 2, 5, 6, 7],
-        [8, 5, 9, 7, 6, 1, 4, 2, 3],
-        [4, 2, 6, 8, 5, 3, 7, 9, 1],
-        [7, 1, 3, 9, 2, 4, 8, 5, 6],
-        [9, 6, 1, 5, 3, 7, 2, 8, 4],
-        [2, 8, 7, 4, 1, 9, 6, 3, 5],
-        [3, 4, 5, 2, 8, 6, 1, 7, 9]
-      ]
-    }
-  ],
-  medium: [
     {
       given: [
         [0, 0, 0, 2, 6, 0, 7, 0, 1],
@@ -59,6 +34,32 @@ const puzzlesByDifficulty = {
         [5, 1, 9, 3, 2, 6, 8, 7, 4],
         [2, 4, 8, 9, 5, 7, 1, 3, 6],
         [7, 6, 3, 4, 1, 8, 2, 5, 9]
+      ]
+    }
+  ],    
+  medium: [
+    {
+      given: [
+        [0, 0, 0, 2, 6, 0, 7, 0, 1],
+        [6, 8, 0, 0, 7, 0, 0, 9, 0],
+        [1, 9, 0, 0, 0, 4, 5, 0, 0],
+        [8, 2, 0, 1, 0, 0, 0, 4, 0],
+        [0, 0, 4, 6, 0, 2, 9, 0, 0],
+        [0, 5, 0, 0, 0, 3, 0, 2, 8],
+        [0, 0, 9, 3, 0, 0, 0, 7, 4],
+        [0, 4, 0, 0, 5, 0, 0, 3, 6],
+        [7, 0, 3, 0, 1, 8, 0, 0, 0]
+      ],
+      solution: [
+        [5, 3, 4, 6, 7, 8, 9, 1, 2],
+        [6, 7, 2, 1, 9, 5, 3, 4, 8],
+        [1, 9, 8, 3, 4, 2, 5, 6, 7],
+        [8, 5, 9, 7, 6, 1, 4, 2, 3],
+        [4, 2, 6, 8, 5, 3, 7, 9, 1],
+        [7, 1, 3, 9, 2, 4, 8, 5, 6],
+        [9, 6, 1, 5, 3, 7, 2, 8, 4],
+        [2, 8, 7, 4, 1, 9, 6, 3, 5],
+        [3, 4, 5, 2, 8, 6, 1, 7, 9]
       ]
     }
   ],
@@ -125,6 +126,8 @@ let mistakes = 0;
 let timerInterval = null;
 let secondsElapsed = 0;
 let gameOver = false;
+let notes = [];
+let notesMode = false;
 
 function cloneGrid(grid) {
   return grid.map(row => [...row]);
@@ -138,6 +141,11 @@ function startNewGame() {
   originalPuzzle = cloneGrid(selectedPuzzle.given);
   solution = cloneGrid(selectedPuzzle.solution);
   board = cloneGrid(selectedPuzzle.given);
+
+  notes = createEmptyNotesGrid();
+  notesMode = false;
+  notesToggleButton.classList.remove("active");
+  notesToggleButton.textContent = "Notes Off";
 
   selectedRow = null;
   selectedCol = null;
@@ -176,8 +184,11 @@ function drawBoard() {
       }
 
       const value = board[row][col];
+
       if (value !== 0) {
         cell.textContent = value;
+      } else if (notes[row][col].size > 0) {
+        renderNotes(cell, row, col);
       }
 
       cell.addEventListener("click", () => selectCell(row, col));
@@ -238,6 +249,11 @@ function placeNumber(value) {
     return;
   }
 
+  if (notesMode && value !== 0) {
+    toggleNote(value);
+    return;
+  }
+
   if (originalPuzzle[selectedRow][selectedCol] !== 0) {
     setStatus("That number is part of the original puzzle.", "error");
     return;
@@ -245,6 +261,7 @@ function placeNumber(value) {
 
   const previousValue = board[selectedRow][selectedCol];
   board[selectedRow][selectedCol] = value;
+  notes[selectedRow][selectedCol].clear();
 
   if (value !== 0 && value !== solution[selectedRow][selectedCol] && previousValue !== value) {
     mistakes++;
@@ -292,6 +309,7 @@ function checkBoard() {
 
 function solveBoard() {
   board = cloneGrid(solution);
+  notes = createEmptyNotesGrid();
   gameOver = true;
   stopTimer();
   selectedRow = null;
@@ -424,11 +442,65 @@ function setStatus(message, type = "") {
   }
 }
 
+function createEmptyNotesGrid() {
+  return Array.from({ length: 9 }, () =>
+    Array.from({ length: 9 }, () => new Set())
+  );
+}
+
+function renderNotes(cell, row, col) {
+  const grid = document.createElement("div");
+  grid.className = "notes-grid";
+
+  for (let value = 1; value <= 9; value++) {
+    const note = document.createElement("span");
+    note.textContent = notes[row][col].has(value) ? value : "";
+    grid.appendChild(note);
+  }
+
+  cell.appendChild(grid);
+}
+
+function toggleNotesMode() {
+  notesMode = !notesMode;
+  notesToggleButton.classList.toggle("active", notesMode);
+  notesToggleButton.textContent = notesMode ? "Notes On" : "Notes Off";
+  setStatus(notesMode ? "Notes mode is on." : "Notes mode is off.");
+}
+
+function toggleNote(value) {
+  if (gameOver || selectedRow === null || selectedCol === null) {
+    return;
+  }
+
+  if (originalPuzzle[selectedRow][selectedCol] !== 0) {
+    setStatus("You cannot add notes to an original puzzle cell.", "error");
+    return;
+  }
+
+  if (board[selectedRow][selectedCol] !== 0) {
+    setStatus("Clear the cell before adding notes.", "error");
+    return;
+  }
+
+  const cellNotes = notes[selectedRow][selectedCol];
+
+  if (cellNotes.has(value)) {
+    cellNotes.delete(value);
+  } else {
+    cellNotes.add(value);
+  }
+
+  drawBoard();
+  setStatus(`Toggled note ${value}.`);
+}
+
 newGameButton.addEventListener("click", startNewGame);
 solveButton.addEventListener("click", solveBoard);
 checkBoardButton.addEventListener("click", checkBoard);
 eraseButton.addEventListener("click", eraseSelectedCell);
 document.addEventListener("keydown", handleKeyDown);
+notesToggleButton.addEventListener("click", toggleNotesMode);
 
 createNumberPad();
 startNewGame();
