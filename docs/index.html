@@ -1,65 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sudoku</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sudoku</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <main class="app">
-    <section class="top-card">
-      <div class="title-block">
-        <h1>Sudoku</h1>
-        <p class="subtitle">Play a clean, lightweight Sudoku game in your browser.</p>
-      </div>
+    <main class="app">
+        <section class="top-card">
+            <div class="title-block">
+                <h1>Sudoku</h1>
+                <p class="subtitle">Play a clean, lightweight Sudoku game in your browser.</p>
+            </div>
 
-      <div class="stats">
-        <div class="stat-card">
-          <span class="stat-label">Time</span>
-          <span id="timer" class="stat-value">00:00</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Mistakes</span>
-          <span id="mistakes" class="stat-value">0</span>
-        </div>
-      </div>
-    </section>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-label">Time</span>
+                    <span id="timer" class="stat-value">00:00</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Mistakes</span>
+                    <span id="mistakes" class="stat-value">0</span>
+                </div>
+            </div>
+        </section>
 
-    <section class="control-card">
-      <div class="control-group">
-        <label for="difficulty">Difficulty</label>
-        <select id="difficulty">
-          <option value="easy">Easy</option>
-          <option value="medium" selected>Medium</option>
-          <option value="hard">Hard</option>
-          <option value="expert">Expert</option>
-        </select>
-      </div>
+        <section class="control-card">
+            <div class="control-group">
+                <label for="difficulty">Difficulty</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                    <option value="expert">Expert</option>
+                </select>
+            </div>
 
-      <button id="new-game" class="primary-button" type="button">New Game</button>
-      <button id="notes-toggle" type="button">Notes Off</button>
-      <button id="theme-toggle" type="button">Dark Mode</button>
-      <button id="check-board" type="button">Check</button>
-      <button id="solve" class="ghost-button" type="button">Solve</button>
-    </section>
+            <button id="new-game" class="primary-button" type="button">New Game</button>
+            <button id="notes-toggle" type="button">Notes Off</button>
+            <button id="theme-toggle" type="button">Dark Mode</button>
+            <button id="check-board" type="button">Check</button>
+            <button id="solve" class="ghost-button" type="button">Solve</button>
+        </section>
 
-    <p id="status" class="status" aria-live="polite">Select a cell and enter a number.</p>
+        <p id="status" class="status" aria-live="polite">Select a cell and enter a number.</p>
 
-    <section class="game-layout">
-      <div id="board" class="board" aria-label="Sudoku board"></div>
+        <section class="game-layout">
+            <div id="board" class="board" aria-label="Sudoku board"></div>
 
-      <aside class="side-panel">
-        <div id="number-pad" class="number-pad" aria-label="Number pad"></div>
-        <button id="erase" class="wide-button" type="button">Erase</button>
+            <aside class="side-panel">
+                <div id="number-pad" class="number-pad" aria-label="Number pad"></div>
+                <button id="erase" class="wide-button" type="button">Erase</button>
 
-        <p class="helper-text">
-          Tip: use keyboard numbers, arrow keys, Backspace/Delete, or Notes mode.
-        </p>
-      </aside>
-    </section>
-  </main>
+                <p class="helper-text">
+                    Tip: use keyboard numbers, arrow keys, Backspace/Delete, or Notes mode.
+                </p>
+            </aside>
+        </section>
+    </main>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
